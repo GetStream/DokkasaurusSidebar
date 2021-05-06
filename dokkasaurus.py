@@ -17,14 +17,31 @@ def cli(path, root_name, output_path, auto_generated, multi_module, filter_file)
     """
     global base_path
     base_path = path
-    filter_list = []
 
     if auto_generated == True and multi_module == False:
         create_side_bar_category_files(path, root_name, 1)
         print("Category files created")
+    elif auto_generated == True and multi_module == True:
+        create_multi_module_side_bar_category_files(path, root_name, filter_file)
+        print("Category files created")
     else:
         create_side_bar_file(path, root_name, output_path)
         print("Sidebar file created at: " + path)
+
+def create_multi_module_side_bar_category_files(path, label, filter_file):
+    module_list = []
+
+    with open(filter_file) as filter_f:
+        module_list = json.load(filter_f)
+
+    create_category_file(path, label, 1)
+
+    position = 2
+
+    for module in module_list:
+        file_path = parse_path_from_input(path, module)
+        create_side_bar_category_files(file_path, module, position)
+        position += 1
 
 def create_side_bar_category_files(path, label, position):
     create_category_file(path, label, position)
