@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="dokkasaurus",
-    version="0.2.1",
+    version="0.3.0",
     py_modules=["dokkasaurus"],
     include_package_data=True,
     install_requires=["click"],
