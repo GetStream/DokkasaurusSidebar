@@ -19,7 +19,8 @@ def cli(path, root_name, output_path):
     sidebar = sidebar_map(directory_map)
     json_dump = json.dumps(sidebar, indent=2, sort_keys=False)
 
-    output_file = output-path + "sidebars.js"
+
+    output_file = output_path + "/sidebars.js"
 
     with open(output_file, "w") as sidebar_file:
         sidebar_file.write("module.exports = ")
