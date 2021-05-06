@@ -19,12 +19,17 @@ def cli(path, root_name, output_path):
     sidebar = sidebar_map(directory_map)
     json_dump = json.dumps(sidebar, indent=2, sort_keys=False)
 
-
-    output_file = output_path + "/sidebars.js"
+    output_file = get_out_put_file(output_path, "/sidebars.js")
 
     with open(output_file, "w") as sidebar_file:
         sidebar_file.write("module.exports = ")
         sidebar_file.write(json_dump)
+
+def get_out_put_file(output_path, output_file):
+    if output_path.endswith("/"):
+        return output_path + "sidebars.js"
+    else:
+        return output_path + "/sidebars.js"
 
 def sidebar_map(content_map):
     docs_list = list()
