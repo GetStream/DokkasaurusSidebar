@@ -7,7 +7,8 @@ base_path = "./"
 @click.command()
 @click.argument('path')
 @click.argument('root_name')
-def cli(path, root_name):
+@click.option('-o', '--output-path', default="./")
+def cli(path, root_name, output_path):
     """This command traverses the dokka directory and
     look for .md files to map the hierarchy of files
     """
@@ -18,7 +19,9 @@ def cli(path, root_name):
     sidebar = sidebar_map(directory_map)
     json_dump = json.dumps(sidebar, indent=2, sort_keys=False)
 
-    with open("sidebars.js", "w") as sidebar_file:
+    output_file = output-path + "sidebars.js"
+
+    with open(output_file, "w") as sidebar_file:
         sidebar_file.write("module.exports = ")
         sidebar_file.write(json_dump)
 
