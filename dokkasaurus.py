@@ -7,11 +7,12 @@ base_path = "./"
 @click.command()
 @click.argument('path')
 @click.argument('root_name')
+@click.option('-p', '--root-position', default=1, show_default=True)
 @click.option('-o', '--output-path', default="./", show_default=True)
 @click.option('--auto-generated', is_flag=True)
 @click.option('--multi-module', is_flag=True)
 @click.option('--filter-file')
-def cli(path, root_name, output_path, auto_generated, multi_module, filter_file):
+def cli(path, root_name, root_position, output_path, auto_generated, multi_module, filter_file):
     """This command traverses the dokka directory and
     look for .md files to map the hierarchy of files
     """
@@ -19,43 +20,37 @@ def cli(path, root_name, output_path, auto_generated, multi_module, filter_file)
     base_path = path
 
     if auto_generated == True and multi_module == False:
-        create_side_bar_category_files(path, root_name, 1)
+        create_side_bar_category_files(path, root_name, root_position)
         print("Category files created")
     elif auto_generated == True and multi_module == True:
-        create_multi_module_side_bar_category_files(path, root_name, filter_file)
+        create_multi_module_side_bar_category_files(path, root_name, filter_file, root_position)
         print("Category files created")
     else:
         create_side_bar_file(path, root_name, output_path)
         print("Sidebar file created at: " + path)
 
-def create_multi_module_side_bar_category_files(path, label, filter_file):
+def create_multi_module_side_bar_category_files(path, label, filter_file, root_position):
     module_list = []
 
     with open(filter_file) as filter_f:
         module_list = json.load(filter_f)
 
-    create_category_file(path, label, 1)
-
-    position = 2
+    create_category_file(path, label, root_position)
 
     for module in module_list:
         file_path = parse_path_from_input(path, module)
-        create_side_bar_category_files(file_path, module, position)
-        position += 1
+        create_side_bar_category_files(file_path, module)
 
-def create_side_bar_category_files(path, label, position):
-    create_category_file(path, label, position)
+def create_side_bar_category_files(path, label):
+    create_category_file(path, label)
 
     folders_path, _ = folders_and_items(path)
     folders_path.sort()
 
-    position = 1
 
     for folder_path in folders_path:
         folder_name = os.path.basename(folder_path)
-        create_side_bar_category_files(folder_path, folder_name, position)
-        position += 1
-
+        create_side_bar_category_files(folder_path, folder_name)
 
 def create_side_bar_file(path, root_name, output_file):
     directory_map = directory_tree_to_map(path, root_name)
@@ -125,8 +120,12 @@ def organize_items(items, label):
                 items.insert(0, item)
     return items
 
-def create_category_file(path, label, position):
-    info = {"label": label, "position": position}
+def create_category_file(path, label, position=None):
+    info = {"label": label}
+
+    if position != None:
+        info["position"] = position
+
     info_json = json.dumps(info, indent=2, sort_keys=False)
 
     file_path = parse_path_from_input(path, "_category_.json")
