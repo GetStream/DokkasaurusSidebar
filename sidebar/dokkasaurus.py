@@ -1,8 +1,6 @@
 import click
 from sidebar.functions.dokka_function import sidebar_command
 
-base_path = "./"
-
 @click.command()
 @click.argument('path')
 @click.argument('root_name')
