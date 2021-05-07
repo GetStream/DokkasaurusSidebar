@@ -1,18 +1,8 @@
-import click
 import os
 import json
+from sidebar.functions.files_function import *
 
-base_path = "./"
-
-@click.command()
-@click.argument('path')
-@click.argument('root_name')
-@click.option('-p', '--root-position', default=1, show_default=True)
-@click.option('-o', '--output-path', default="./", show_default=True)
-@click.option('--auto-generated', is_flag=True)
-@click.option('--multi-module', is_flag=True)
-@click.option('--filter-file')
-def cli(path, root_name, root_position, output_path, auto_generated, multi_module, filter_file):
+def sidebar_command(path, root_name, root_position, output_path, auto_generated, multi_module, filter_file):
     """This command traverses the dokka directory and
     look for .md files to map the hierarchy of files
     """
@@ -133,21 +123,3 @@ def create_category_file(path, label, position=None):
     with open(file_path, "w") as category_file:
         category_file.write(info_json)
         category_file.write('\n')
-
-def remove_path_from_file(path):
-    return path.rsplit("/", 1)[0]
-
-def remove_extension(path):
-    return path.rsplit(".", 1)[0]
-
-def is_markdown(file_path):
-    return file_path.endswith(".md")
-
-def is_index_file(file_path):
-    return file_path.endswith("index.md")
-
-def parse_path_from_input(input_path, file):
-    if input_path.endswith("/"):
-        return input_path + file
-    else:
-        return input_path + "/" + file

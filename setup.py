@@ -1,13 +1,13 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name="dokkasaurus",
     version="0.3.0",
-    py_modules=["dokkasaurus"],
+    packages=find_packages(),
     include_package_data=True,
-    install_requires=["click"],
+    install_requires=["Click"],
     entry_points="""
         [console_scripts]
-        dokkasaurus=dokkasaurus:cli
+        dokkasaurus=sidebar.dokkasaurus:cli
     """,
 )
